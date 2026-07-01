@@ -1,0 +1,29 @@
+{
+  "name": "local_reach_be",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "db_sync_tables": "node db/setup/sync_models.js",
+    "seed": "node scripts/seed.js",
+    "create_super_admin": "node scripts/create_super_admin.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "await-to-js": "^3.0.0",
+    "bcrypt": "^6.0.0",
+    "cors": "^2.8.6",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "express-rate-limit": "^8.5.2",
+    "jsonwebtoken": "^9.0.3",
+    "lodash": "^4.18.1",
+    "mysql2": "^3.22.4",
+    "nodemailer": "^8.0.10",
+    "sequelize": "^6.37.8",
+    "uuid": "^11.1.0"
+  }
+}
