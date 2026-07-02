@@ -1,6 +1,6 @@
 const { DataTypes } = require('sequelize');
 
-let tableName = "users";
+let tableName = "campaigns";
 
 let column_definitions = {
     id: {
@@ -11,48 +11,40 @@ let column_definitions = {
     },
     company_id: {
         type: DataTypes.UUID,
-        allowNull: true
-    },
-    first_name: {
-        type: DataTypes.STRING(100),
         allowNull: false
     },
-    last_name: {
-        type: DataTypes.STRING(100),
+    name: {
+        type: DataTypes.STRING(150),
         allowNull: false
     },
-    email: {
-        type: DataTypes.STRING(255),
-        allowNull: false,
-        unique: true
-    },
-    password_hash: {
-        type: DataTypes.STRING(500),
-        allowNull: false
-    },
-    phone: {
-        type: DataTypes.STRING(20),
+    description: {
+        type: DataTypes.TEXT,
         allowNull: true
-    },
-    avatar_url: {
-        type: DataTypes.STRING(500),
-        allowNull: true
-    },
-    user_type: {
-        type: DataTypes.ENUM('admin', 'user'),
-        defaultValue: 'user'
     },
     status: {
-        type: DataTypes.ENUM('PENDING_VERIFICATION', 'ACTIVE', 'IN_ACTIVE', 'SUSPENDED', 'DELETED'),
-        defaultValue: 'PENDING_VERIFICATION'
+        type: DataTypes.ENUM('DRAFT', 'PENDING_APPROVAL', 'APPROVED', 'ACTIVE', 'PAUSED', 'COMPLETED', 'CANCELLED', 'REJECTED'),
+        defaultValue: 'DRAFT'
     },
-    last_logged_in: {
-        type: DataTypes.DATE,
+    priority_id: {
+        type: DataTypes.UUID,
         allowNull: true
     },
-    terms_accepted_at: {
-        type: DataTypes.DATE,
+    is_emergency_override: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: false
+    },
+    budget: {
+        type: DataTypes.DECIMAL(12, 2),
         allowNull: true
+    },
+    start_date: {
+        type: DataTypes.DATE,
+        allowNull: false
+    },
+    end_date: {
+        type: DataTypes.DATE,
+        allowNull: false
     },
     created_by: {
         type: DataTypes.UUID,
@@ -68,7 +60,7 @@ let column_definitions = {
     }
 };
 
-const User = (sequelizeInstance) => {
+const Campaign = (sequelizeInstance) => {
     let model_options = {
         sequelizeInstance,
         tableName: tableName,
@@ -77,11 +69,16 @@ const User = (sequelizeInstance) => {
         updatedAt: "updated_date",
         createdAt: "created_date",
         deletedAt: "deleted_date",
+        indexes: [
+            { fields: ['company_id', 'status'] },
+            { fields: ['start_date', 'end_date'] },
+            { fields: ['priority_id'] },
+        ],
     };
 
-    let model = sequelizeInstance.define('user', column_definitions, model_options);
+    let model = sequelizeInstance.define('campaign', column_definitions, model_options);
 
     return model;
 };
 
-module.exports = User;
+module.exports = Campaign;

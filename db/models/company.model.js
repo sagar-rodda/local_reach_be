@@ -1,6 +1,6 @@
 const { DataTypes } = require('sequelize');
 
-let tableName = "roles";
+let tableName = "companies";
 
 let column_definitions = {
     id: {
@@ -9,25 +9,34 @@ let column_definitions = {
         primaryKey: true,
         defaultValue: DataTypes.UUIDV4
     },
-    company_id: {
-        type: DataTypes.UUID,
-        allowNull: true
-    },
-    role: {
-        type: DataTypes.STRING(100),
+    name: {
+        type: DataTypes.STRING(255),
         allowNull: false
     },
-    description: {
+    legal_name: {
         type: DataTypes.STRING(255),
         allowNull: true
     },
-    scope: {
-        type: DataTypes.ENUM('SYSTEM', 'CUSTOM'),
-        defaultValue: 'CUSTOM'
+    email: {
+        type: DataTypes.STRING(255),
+        allowNull: true
     },
-    status: {
-        type: DataTypes.ENUM('ACTIVE', 'IN_ACTIVE'),
-        defaultValue: 'ACTIVE'
+    phone: {
+        type: DataTypes.STRING(20),
+        allowNull: true
+    },
+    website: {
+        type: DataTypes.STRING(255),
+        allowNull: true
+    },
+    logo_url: {
+        type: DataTypes.STRING(500),
+        allowNull: true
+    },
+    is_active: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: true
     },
     created_by: {
         type: DataTypes.UUID,
@@ -43,7 +52,7 @@ let column_definitions = {
     }
 };
 
-const Role = (sequelizeInstance) => {
+const Company = (sequelizeInstance) => {
     let model_options = {
         sequelizeInstance,
         tableName: tableName,
@@ -52,11 +61,14 @@ const Role = (sequelizeInstance) => {
         updatedAt: "updated_date",
         createdAt: "created_date",
         deletedAt: "deleted_date",
+        indexes: [
+            { fields: ['is_active'] },
+        ],
     };
 
-    let model = sequelizeInstance.define('role', column_definitions, model_options);
+    let model = sequelizeInstance.define('company', column_definitions, model_options);
 
     return model;
 };
 
-module.exports = Role;
+module.exports = Company;

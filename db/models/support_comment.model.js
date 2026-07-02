@@ -1,6 +1,6 @@
 const { DataTypes } = require('sequelize');
 
-let tableName = "roles";
+let tableName = "support_comments";
 
 let column_definitions = {
     id: {
@@ -9,25 +9,22 @@ let column_definitions = {
         primaryKey: true,
         defaultValue: DataTypes.UUIDV4
     },
-    company_id: {
+    ticket_id: {
         type: DataTypes.UUID,
-        allowNull: true
-    },
-    role: {
-        type: DataTypes.STRING(100),
         allowNull: false
     },
-    description: {
-        type: DataTypes.STRING(255),
-        allowNull: true
+    author_id: {
+        type: DataTypes.UUID,
+        allowNull: false
     },
-    scope: {
-        type: DataTypes.ENUM('SYSTEM', 'CUSTOM'),
-        defaultValue: 'CUSTOM'
+    body: {
+        type: DataTypes.TEXT,
+        allowNull: false
     },
-    status: {
-        type: DataTypes.ENUM('ACTIVE', 'IN_ACTIVE'),
-        defaultValue: 'ACTIVE'
+    is_internal: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: false
     },
     created_by: {
         type: DataTypes.UUID,
@@ -43,7 +40,7 @@ let column_definitions = {
     }
 };
 
-const Role = (sequelizeInstance) => {
+const SupportComment = (sequelizeInstance) => {
     let model_options = {
         sequelizeInstance,
         tableName: tableName,
@@ -52,11 +49,14 @@ const Role = (sequelizeInstance) => {
         updatedAt: "updated_date",
         createdAt: "created_date",
         deletedAt: "deleted_date",
+        indexes: [
+            { fields: ['ticket_id'] },
+        ],
     };
 
-    let model = sequelizeInstance.define('role', column_definitions, model_options);
+    let model = sequelizeInstance.define('support_comment', column_definitions, model_options);
 
     return model;
 };
 
-module.exports = Role;
+module.exports = SupportComment;

@@ -1,6 +1,6 @@
 const { DataTypes } = require('sequelize');
 
-let tableName = "roles";
+let tableName = "notifications";
 
 let column_definitions = {
     id: {
@@ -13,27 +13,23 @@ let column_definitions = {
         type: DataTypes.UUID,
         allowNull: true
     },
-    role: {
-        type: DataTypes.STRING(100),
+    type: {
+        type: DataTypes.ENUM('SYSTEM', 'DEVICE_OFFLINE', 'CAMPAIGN_APPROVAL', 'CAMPAIGN_EXPIRING', 'SUPPORT_TICKET', 'PLAYBACK_ERROR', 'LOW_STORAGE'),
         allowNull: false
     },
-    description: {
+    title: {
         type: DataTypes.STRING(255),
+        allowNull: false
+    },
+    body: {
+        type: DataTypes.TEXT,
+        allowNull: false
+    },
+    data: {
+        type: DataTypes.JSON,
         allowNull: true
-    },
-    scope: {
-        type: DataTypes.ENUM('SYSTEM', 'CUSTOM'),
-        defaultValue: 'CUSTOM'
-    },
-    status: {
-        type: DataTypes.ENUM('ACTIVE', 'IN_ACTIVE'),
-        defaultValue: 'ACTIVE'
     },
     created_by: {
-        type: DataTypes.UUID,
-        allowNull: true
-    },
-    updated_by: {
         type: DataTypes.UUID,
         allowNull: true
     },
@@ -43,20 +39,24 @@ let column_definitions = {
     }
 };
 
-const Role = (sequelizeInstance) => {
+const Notification = (sequelizeInstance) => {
     let model_options = {
         sequelizeInstance,
         tableName: tableName,
         timestamps: true,
         paranoid: true,
-        updatedAt: "updated_date",
         createdAt: "created_date",
+        updatedAt: false,
         deletedAt: "deleted_date",
+        indexes: [
+            { fields: ['company_id', 'type'] },
+            { fields: ['created_date'] },
+        ],
     };
 
-    let model = sequelizeInstance.define('role', column_definitions, model_options);
+    let model = sequelizeInstance.define('notification', column_definitions, model_options);
 
     return model;
 };
 
-module.exports = Role;
+module.exports = Notification;

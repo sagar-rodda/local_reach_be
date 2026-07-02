@@ -1,6 +1,6 @@
 const { DataTypes } = require('sequelize');
 
-let tableName = "roles";
+let tableName = "device_screenshots";
 
 let column_definitions = {
     id: {
@@ -9,31 +9,20 @@ let column_definitions = {
         primaryKey: true,
         defaultValue: DataTypes.UUIDV4
     },
-    company_id: {
+    device_id: {
         type: DataTypes.UUID,
-        allowNull: true
-    },
-    role: {
-        type: DataTypes.STRING(100),
         allowNull: false
     },
-    description: {
-        type: DataTypes.STRING(255),
-        allowNull: true
+    file_url: {
+        type: DataTypes.STRING(500),
+        allowNull: false
     },
-    scope: {
-        type: DataTypes.ENUM('SYSTEM', 'CUSTOM'),
-        defaultValue: 'CUSTOM'
-    },
-    status: {
-        type: DataTypes.ENUM('ACTIVE', 'IN_ACTIVE'),
-        defaultValue: 'ACTIVE'
+    captured_at: {
+        type: DataTypes.DATE,
+        allowNull: false,
+        defaultValue: DataTypes.NOW
     },
     created_by: {
-        type: DataTypes.UUID,
-        allowNull: true
-    },
-    updated_by: {
         type: DataTypes.UUID,
         allowNull: true
     },
@@ -43,20 +32,23 @@ let column_definitions = {
     }
 };
 
-const Role = (sequelizeInstance) => {
+const DeviceScreenshot = (sequelizeInstance) => {
     let model_options = {
         sequelizeInstance,
         tableName: tableName,
         timestamps: true,
         paranoid: true,
-        updatedAt: "updated_date",
         createdAt: "created_date",
+        updatedAt: false,
         deletedAt: "deleted_date",
+        indexes: [
+            { fields: ['device_id', 'captured_at'] },
+        ],
     };
 
-    let model = sequelizeInstance.define('role', column_definitions, model_options);
+    let model = sequelizeInstance.define('device_screenshot', column_definitions, model_options);
 
     return model;
 };
 
-module.exports = Role;
+module.exports = DeviceScreenshot;

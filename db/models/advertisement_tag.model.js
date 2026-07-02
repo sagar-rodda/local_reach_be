@@ -1,6 +1,6 @@
 const { DataTypes } = require('sequelize');
 
-let tableName = "roles";
+let tableName = "advertisement_tags";
 
 let column_definitions = {
     id: {
@@ -9,31 +9,15 @@ let column_definitions = {
         primaryKey: true,
         defaultValue: DataTypes.UUIDV4
     },
-    company_id: {
+    advertisement_id: {
         type: DataTypes.UUID,
-        allowNull: true
-    },
-    role: {
-        type: DataTypes.STRING(100),
         allowNull: false
     },
-    description: {
-        type: DataTypes.STRING(255),
-        allowNull: true
-    },
-    scope: {
-        type: DataTypes.ENUM('SYSTEM', 'CUSTOM'),
-        defaultValue: 'CUSTOM'
-    },
-    status: {
-        type: DataTypes.ENUM('ACTIVE', 'IN_ACTIVE'),
-        defaultValue: 'ACTIVE'
+    media_tag_id: {
+        type: DataTypes.UUID,
+        allowNull: false
     },
     created_by: {
-        type: DataTypes.UUID,
-        allowNull: true
-    },
-    updated_by: {
         type: DataTypes.UUID,
         allowNull: true
     },
@@ -43,20 +27,24 @@ let column_definitions = {
     }
 };
 
-const Role = (sequelizeInstance) => {
+const AdvertisementTag = (sequelizeInstance) => {
     let model_options = {
         sequelizeInstance,
         tableName: tableName,
         timestamps: true,
         paranoid: true,
-        updatedAt: "updated_date",
         createdAt: "created_date",
+        updatedAt: false,
         deletedAt: "deleted_date",
+        indexes: [
+            { unique: true, fields: ['advertisement_id', 'media_tag_id'] },
+            { fields: ['media_tag_id'] },
+        ],
     };
 
-    let model = sequelizeInstance.define('role', column_definitions, model_options);
+    let model = sequelizeInstance.define('advertisement_tag', column_definitions, model_options);
 
     return model;
 };
 
-module.exports = Role;
+module.exports = AdvertisementTag;

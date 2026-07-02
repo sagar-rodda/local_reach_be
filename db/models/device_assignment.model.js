@@ -1,6 +1,6 @@
 const { DataTypes } = require('sequelize');
 
-let tableName = "roles";
+let tableName = "device_assignments";
 
 let column_definitions = {
     id: {
@@ -9,25 +9,26 @@ let column_definitions = {
         primaryKey: true,
         defaultValue: DataTypes.UUIDV4
     },
-    company_id: {
+    device_id: {
         type: DataTypes.UUID,
-        allowNull: true
-    },
-    role: {
-        type: DataTypes.STRING(100),
         allowNull: false
     },
-    description: {
-        type: DataTypes.STRING(255),
-        allowNull: true
-    },
-    scope: {
-        type: DataTypes.ENUM('SYSTEM', 'CUSTOM'),
-        defaultValue: 'CUSTOM'
+    device_group_id: {
+        type: DataTypes.UUID,
+        allowNull: false
     },
     status: {
-        type: DataTypes.ENUM('ACTIVE', 'IN_ACTIVE'),
+        type: DataTypes.ENUM('ACTIVE', 'ENDED'),
         defaultValue: 'ACTIVE'
+    },
+    assigned_at: {
+        type: DataTypes.DATE,
+        allowNull: false,
+        defaultValue: DataTypes.NOW
+    },
+    unassigned_at: {
+        type: DataTypes.DATE,
+        allowNull: true
     },
     created_by: {
         type: DataTypes.UUID,
@@ -43,7 +44,7 @@ let column_definitions = {
     }
 };
 
-const Role = (sequelizeInstance) => {
+const DeviceAssignment = (sequelizeInstance) => {
     let model_options = {
         sequelizeInstance,
         tableName: tableName,
@@ -52,11 +53,16 @@ const Role = (sequelizeInstance) => {
         updatedAt: "updated_date",
         createdAt: "created_date",
         deletedAt: "deleted_date",
+        indexes: [
+            { fields: ['device_id'] },
+            { fields: ['device_group_id'] },
+            { fields: ['status'] },
+        ],
     };
 
-    let model = sequelizeInstance.define('role', column_definitions, model_options);
+    let model = sequelizeInstance.define('device_assignment', column_definitions, model_options);
 
     return model;
 };
 
-module.exports = Role;
+module.exports = DeviceAssignment;

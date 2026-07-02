@@ -1,6 +1,6 @@
 const { DataTypes } = require('sequelize');
 
-let tableName = "roles";
+let tableName = "stores";
 
 let column_definitions = {
     id: {
@@ -11,23 +11,24 @@ let column_definitions = {
     },
     company_id: {
         type: DataTypes.UUID,
-        allowNull: true
-    },
-    role: {
-        type: DataTypes.STRING(100),
         allowNull: false
     },
-    description: {
-        type: DataTypes.STRING(255),
+    store_category_id: {
+        type: DataTypes.UUID,
         allowNull: true
     },
-    scope: {
-        type: DataTypes.ENUM('SYSTEM', 'CUSTOM'),
-        defaultValue: 'CUSTOM'
+    name: {
+        type: DataTypes.STRING(255),
+        allowNull: false
     },
-    status: {
-        type: DataTypes.ENUM('ACTIVE', 'IN_ACTIVE'),
-        defaultValue: 'ACTIVE'
+    code: {
+        type: DataTypes.STRING(50),
+        allowNull: true
+    },
+    is_active: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: true
     },
     created_by: {
         type: DataTypes.UUID,
@@ -43,7 +44,7 @@ let column_definitions = {
     }
 };
 
-const Role = (sequelizeInstance) => {
+const Store = (sequelizeInstance) => {
     let model_options = {
         sequelizeInstance,
         tableName: tableName,
@@ -52,11 +53,16 @@ const Role = (sequelizeInstance) => {
         updatedAt: "updated_date",
         createdAt: "created_date",
         deletedAt: "deleted_date",
+        indexes: [
+            { unique: true, fields: ['company_id', 'code'] },
+            { fields: ['company_id'] },
+            { fields: ['store_category_id'] },
+        ],
     };
 
-    let model = sequelizeInstance.define('role', column_definitions, model_options);
+    let model = sequelizeInstance.define('store', column_definitions, model_options);
 
     return model;
 };
 
-module.exports = Role;
+module.exports = Store;

@@ -1,6 +1,6 @@
 const { DataTypes } = require('sequelize');
 
-let tableName = "admin_users";
+let tableName = "support_tickets";
 
 let column_definitions = {
     id: {
@@ -13,30 +13,33 @@ let column_definitions = {
         type: DataTypes.UUID,
         allowNull: true
     },
-    first_name: {
-        type: DataTypes.STRING(100),
+    requester_id: {
+        type: DataTypes.UUID,
         allowNull: false
     },
-    last_name: {
-        type: DataTypes.STRING(100),
-        allowNull: false
+    assignee_id: {
+        type: DataTypes.UUID,
+        allowNull: true
     },
-    email: {
+    device_id: {
+        type: DataTypes.UUID,
+        allowNull: true
+    },
+    subject: {
         type: DataTypes.STRING(255),
-        allowNull: false,
-        unique: true
+        allowNull: false
     },
-    password_hash: {
-        type: DataTypes.STRING(500),
+    description: {
+        type: DataTypes.TEXT,
         allowNull: false
     },
     status: {
-        type: DataTypes.ENUM('ACTIVE', 'IN_ACTIVE', 'SUSPENDED', 'DELETED'),
-        defaultValue: 'ACTIVE'
+        type: DataTypes.ENUM('OPEN', 'IN_PROGRESS', 'WAITING_ON_CUSTOMER', 'RESOLVED', 'CLOSED'),
+        defaultValue: 'OPEN'
     },
-    last_sign_in: {
-        type: DataTypes.DATE,
-        allowNull: true
+    priority: {
+        type: DataTypes.ENUM('LOW', 'MEDIUM', 'HIGH', 'URGENT'),
+        defaultValue: 'MEDIUM'
     },
     created_by: {
         type: DataTypes.UUID,
@@ -52,7 +55,7 @@ let column_definitions = {
     }
 };
 
-const AdminUser = (sequelizeInstance) => {
+const SupportTicket = (sequelizeInstance) => {
     let model_options = {
         sequelizeInstance,
         tableName: tableName,
@@ -61,11 +64,16 @@ const AdminUser = (sequelizeInstance) => {
         updatedAt: "updated_date",
         createdAt: "created_date",
         deletedAt: "deleted_date",
+        indexes: [
+            { fields: ['company_id', 'status'] },
+            { fields: ['assignee_id'] },
+            { fields: ['requester_id'] },
+        ],
     };
 
-    let model = sequelizeInstance.define('admin_user', column_definitions, model_options);
+    let model = sequelizeInstance.define('support_ticket', column_definitions, model_options);
 
     return model;
 };
 
-module.exports = AdminUser;
+module.exports = SupportTicket;

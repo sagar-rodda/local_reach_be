@@ -1,6 +1,6 @@
 const { DataTypes } = require('sequelize');
 
-let tableName = "users";
+let tableName = "media_versions";
 
 let column_definitions = {
     id: {
@@ -9,49 +9,44 @@ let column_definitions = {
         primaryKey: true,
         defaultValue: DataTypes.UUIDV4
     },
-    company_id: {
+    media_file_id: {
         type: DataTypes.UUID,
-        allowNull: true
-    },
-    first_name: {
-        type: DataTypes.STRING(100),
         allowNull: false
     },
-    last_name: {
-        type: DataTypes.STRING(100),
+    version_number: {
+        type: DataTypes.INTEGER,
         allowNull: false
     },
-    email: {
-        type: DataTypes.STRING(255),
-        allowNull: false,
-        unique: true
-    },
-    password_hash: {
+    file_path: {
         type: DataTypes.STRING(500),
         allowNull: false
     },
-    phone: {
-        type: DataTypes.STRING(20),
+    file_size_bytes: {
+        type: DataTypes.BIGINT,
+        allowNull: false
+    },
+    checksum: {
+        type: DataTypes.STRING(128),
+        allowNull: false
+    },
+    duration_seconds: {
+        type: DataTypes.INTEGER,
         allowNull: true
     },
-    avatar_url: {
-        type: DataTypes.STRING(500),
+    width: {
+        type: DataTypes.INTEGER,
         allowNull: true
     },
-    user_type: {
-        type: DataTypes.ENUM('admin', 'user'),
-        defaultValue: 'user'
-    },
-    status: {
-        type: DataTypes.ENUM('PENDING_VERIFICATION', 'ACTIVE', 'IN_ACTIVE', 'SUSPENDED', 'DELETED'),
-        defaultValue: 'PENDING_VERIFICATION'
-    },
-    last_logged_in: {
-        type: DataTypes.DATE,
+    height: {
+        type: DataTypes.INTEGER,
         allowNull: true
     },
-    terms_accepted_at: {
-        type: DataTypes.DATE,
+    approval_status: {
+        type: DataTypes.ENUM('PENDING', 'APPROVED', 'REJECTED'),
+        defaultValue: 'PENDING'
+    },
+    metadata: {
+        type: DataTypes.JSON,
         allowNull: true
     },
     created_by: {
@@ -68,7 +63,7 @@ let column_definitions = {
     }
 };
 
-const User = (sequelizeInstance) => {
+const MediaVersion = (sequelizeInstance) => {
     let model_options = {
         sequelizeInstance,
         tableName: tableName,
@@ -77,11 +72,14 @@ const User = (sequelizeInstance) => {
         updatedAt: "updated_date",
         createdAt: "created_date",
         deletedAt: "deleted_date",
+        indexes: [
+            { unique: true, fields: ['media_file_id', 'version_number'] },
+        ],
     };
 
-    let model = sequelizeInstance.define('user', column_definitions, model_options);
+    let model = sequelizeInstance.define('media_version', column_definitions, model_options);
 
     return model;
 };
 
-module.exports = User;
+module.exports = MediaVersion;

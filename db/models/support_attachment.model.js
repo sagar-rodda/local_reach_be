@@ -1,6 +1,6 @@
 const { DataTypes } = require('sequelize');
 
-let tableName = "roles";
+let tableName = "support_attachments";
 
 let column_definitions = {
     id: {
@@ -9,31 +9,27 @@ let column_definitions = {
         primaryKey: true,
         defaultValue: DataTypes.UUIDV4
     },
-    company_id: {
+    ticket_id: {
         type: DataTypes.UUID,
-        allowNull: true
-    },
-    role: {
-        type: DataTypes.STRING(100),
         allowNull: false
     },
-    description: {
-        type: DataTypes.STRING(255),
-        allowNull: true
-    },
-    scope: {
-        type: DataTypes.ENUM('SYSTEM', 'CUSTOM'),
-        defaultValue: 'CUSTOM'
-    },
-    status: {
-        type: DataTypes.ENUM('ACTIVE', 'IN_ACTIVE'),
-        defaultValue: 'ACTIVE'
-    },
-    created_by: {
+    comment_id: {
         type: DataTypes.UUID,
         allowNull: true
     },
-    updated_by: {
+    file_url: {
+        type: DataTypes.STRING(500),
+        allowNull: false
+    },
+    file_name: {
+        type: DataTypes.STRING(255),
+        allowNull: false
+    },
+    file_size_bytes: {
+        type: DataTypes.BIGINT,
+        allowNull: true
+    },
+    created_by: {
         type: DataTypes.UUID,
         allowNull: true
     },
@@ -43,20 +39,24 @@ let column_definitions = {
     }
 };
 
-const Role = (sequelizeInstance) => {
+const SupportAttachment = (sequelizeInstance) => {
     let model_options = {
         sequelizeInstance,
         tableName: tableName,
         timestamps: true,
         paranoid: true,
-        updatedAt: "updated_date",
         createdAt: "created_date",
+        updatedAt: false,
         deletedAt: "deleted_date",
+        indexes: [
+            { fields: ['ticket_id'] },
+            { fields: ['comment_id'] },
+        ],
     };
 
-    let model = sequelizeInstance.define('role', column_definitions, model_options);
+    let model = sequelizeInstance.define('support_attachment', column_definitions, model_options);
 
     return model;
 };
 
-module.exports = Role;
+module.exports = SupportAttachment;

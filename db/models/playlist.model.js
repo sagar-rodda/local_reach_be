@@ -1,6 +1,6 @@
 const { DataTypes } = require('sequelize');
 
-let tableName = "roles";
+let tableName = "playlists";
 
 let column_definitions = {
     id: {
@@ -11,23 +11,25 @@ let column_definitions = {
     },
     company_id: {
         type: DataTypes.UUID,
-        allowNull: true
+        allowNull: false
     },
-    role: {
-        type: DataTypes.STRING(100),
+    name: {
+        type: DataTypes.STRING(150),
         allowNull: false
     },
     description: {
-        type: DataTypes.STRING(255),
+        type: DataTypes.TEXT,
         allowNull: true
     },
-    scope: {
-        type: DataTypes.ENUM('SYSTEM', 'CUSTOM'),
-        defaultValue: 'CUSTOM'
+    is_active: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: true
     },
-    status: {
-        type: DataTypes.ENUM('ACTIVE', 'IN_ACTIVE'),
-        defaultValue: 'ACTIVE'
+    current_version_id: {
+        type: DataTypes.UUID,
+        allowNull: true,
+        unique: true
     },
     created_by: {
         type: DataTypes.UUID,
@@ -43,7 +45,7 @@ let column_definitions = {
     }
 };
 
-const Role = (sequelizeInstance) => {
+const Playlist = (sequelizeInstance) => {
     let model_options = {
         sequelizeInstance,
         tableName: tableName,
@@ -52,11 +54,14 @@ const Role = (sequelizeInstance) => {
         updatedAt: "updated_date",
         createdAt: "created_date",
         deletedAt: "deleted_date",
+        indexes: [
+            { fields: ['company_id', 'is_active'] },
+        ],
     };
 
-    let model = sequelizeInstance.define('role', column_definitions, model_options);
+    let model = sequelizeInstance.define('playlist', column_definitions, model_options);
 
     return model;
 };
 
-module.exports = Role;
+module.exports = Playlist;

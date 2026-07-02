@@ -1,6 +1,6 @@
 const { DataTypes } = require('sequelize');
 
-let tableName = "roles";
+let tableName = "countries";
 
 let column_definitions = {
     id: {
@@ -9,25 +9,14 @@ let column_definitions = {
         primaryKey: true,
         defaultValue: DataTypes.UUIDV4
     },
-    company_id: {
-        type: DataTypes.UUID,
-        allowNull: true
-    },
-    role: {
-        type: DataTypes.STRING(100),
+    name: {
+        type: DataTypes.STRING(150),
         allowNull: false
     },
-    description: {
-        type: DataTypes.STRING(255),
-        allowNull: true
-    },
-    scope: {
-        type: DataTypes.ENUM('SYSTEM', 'CUSTOM'),
-        defaultValue: 'CUSTOM'
-    },
-    status: {
-        type: DataTypes.ENUM('ACTIVE', 'IN_ACTIVE'),
-        defaultValue: 'ACTIVE'
+    iso_code: {
+        type: DataTypes.STRING(10),
+        allowNull: true,
+        unique: true
     },
     created_by: {
         type: DataTypes.UUID,
@@ -43,7 +32,7 @@ let column_definitions = {
     }
 };
 
-const Role = (sequelizeInstance) => {
+const Country = (sequelizeInstance) => {
     let model_options = {
         sequelizeInstance,
         tableName: tableName,
@@ -54,9 +43,9 @@ const Role = (sequelizeInstance) => {
         deletedAt: "deleted_date",
     };
 
-    let model = sequelizeInstance.define('role', column_definitions, model_options);
+    let model = sequelizeInstance.define('country', column_definitions, model_options);
 
     return model;
 };
 
-module.exports = Role;
+module.exports = Country;

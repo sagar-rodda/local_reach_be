@@ -1,6 +1,6 @@
 const { DataTypes } = require('sequelize');
 
-let tableName = "users";
+let tableName = "advertisements";
 
 let column_definitions = {
     id: {
@@ -11,47 +11,34 @@ let column_definitions = {
     },
     company_id: {
         type: DataTypes.UUID,
-        allowNull: true
-    },
-    first_name: {
-        type: DataTypes.STRING(100),
         allowNull: false
     },
-    last_name: {
-        type: DataTypes.STRING(100),
-        allowNull: false
-    },
-    email: {
+    advertiser_name: {
         type: DataTypes.STRING(255),
-        allowNull: false,
-        unique: true
-    },
-    password_hash: {
-        type: DataTypes.STRING(500),
         allowNull: false
     },
-    phone: {
-        type: DataTypes.STRING(20),
-        allowNull: true
+    title: {
+        type: DataTypes.STRING(255),
+        allowNull: false
     },
-    avatar_url: {
-        type: DataTypes.STRING(500),
-        allowNull: true
-    },
-    user_type: {
-        type: DataTypes.ENUM('admin', 'user'),
-        defaultValue: 'user'
+    type: {
+        type: DataTypes.ENUM('IMAGE', 'VIDEO', 'HTML5', 'AUDIO', 'STREAM'),
+        allowNull: false
     },
     status: {
-        type: DataTypes.ENUM('PENDING_VERIFICATION', 'ACTIVE', 'IN_ACTIVE', 'SUSPENDED', 'DELETED'),
-        defaultValue: 'PENDING_VERIFICATION'
+        type: DataTypes.ENUM('PENDING', 'APPROVED', 'REJECTED'),
+        defaultValue: 'PENDING'
     },
-    last_logged_in: {
+    start_date: {
         type: DataTypes.DATE,
         allowNull: true
     },
-    terms_accepted_at: {
+    end_date: {
         type: DataTypes.DATE,
+        allowNull: true
+    },
+    duration_seconds: {
+        type: DataTypes.INTEGER,
         allowNull: true
     },
     created_by: {
@@ -68,7 +55,7 @@ let column_definitions = {
     }
 };
 
-const User = (sequelizeInstance) => {
+const Advertisement = (sequelizeInstance) => {
     let model_options = {
         sequelizeInstance,
         tableName: tableName,
@@ -77,11 +64,15 @@ const User = (sequelizeInstance) => {
         updatedAt: "updated_date",
         createdAt: "created_date",
         deletedAt: "deleted_date",
+        indexes: [
+            { fields: ['company_id', 'status'] },
+            { fields: ['type'] },
+        ],
     };
 
-    let model = sequelizeInstance.define('user', column_definitions, model_options);
+    let model = sequelizeInstance.define('advertisement', column_definitions, model_options);
 
     return model;
 };
 
-module.exports = User;
+module.exports = Advertisement;

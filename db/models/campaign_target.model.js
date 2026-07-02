@@ -1,6 +1,6 @@
 const { DataTypes } = require('sequelize');
 
-let tableName = "roles";
+let tableName = "campaign_targets";
 
 let column_definitions = {
     id: {
@@ -9,31 +9,19 @@ let column_definitions = {
         primaryKey: true,
         defaultValue: DataTypes.UUIDV4
     },
-    company_id: {
+    campaign_id: {
         type: DataTypes.UUID,
-        allowNull: true
-    },
-    role: {
-        type: DataTypes.STRING(100),
         allowNull: false
     },
-    description: {
-        type: DataTypes.STRING(255),
-        allowNull: true
+    target_type: {
+        type: DataTypes.ENUM('COUNTRY', 'STATE', 'CITY', 'AREA', 'STORE', 'STORE_CATEGORY', 'DEVICE_GROUP', 'DEVICE'),
+        allowNull: false
     },
-    scope: {
-        type: DataTypes.ENUM('SYSTEM', 'CUSTOM'),
-        defaultValue: 'CUSTOM'
-    },
-    status: {
-        type: DataTypes.ENUM('ACTIVE', 'IN_ACTIVE'),
-        defaultValue: 'ACTIVE'
+    target_id: {
+        type: DataTypes.UUID,
+        allowNull: false
     },
     created_by: {
-        type: DataTypes.UUID,
-        allowNull: true
-    },
-    updated_by: {
         type: DataTypes.UUID,
         allowNull: true
     },
@@ -43,20 +31,24 @@ let column_definitions = {
     }
 };
 
-const Role = (sequelizeInstance) => {
+const CampaignTarget = (sequelizeInstance) => {
     let model_options = {
         sequelizeInstance,
         tableName: tableName,
         timestamps: true,
         paranoid: true,
-        updatedAt: "updated_date",
         createdAt: "created_date",
+        updatedAt: false,
         deletedAt: "deleted_date",
+        indexes: [
+            { unique: true, fields: ['campaign_id', 'target_type', 'target_id'] },
+            { fields: ['target_type', 'target_id'] },
+        ],
     };
 
-    let model = sequelizeInstance.define('role', column_definitions, model_options);
+    let model = sequelizeInstance.define('campaign_target', column_definitions, model_options);
 
     return model;
 };
 
-module.exports = Role;
+module.exports = CampaignTarget;

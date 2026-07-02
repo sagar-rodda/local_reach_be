@@ -22,6 +22,10 @@ let column_definitions = {
         type: DataTypes.STRING(50),
         allowNull: false
     },
+    description: {
+        type: DataTypes.STRING(255),
+        allowNull: true
+    },
     deleted_date: {
         type: DataTypes.DATE,
         allowNull: true

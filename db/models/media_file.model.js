@@ -1,6 +1,6 @@
 const { DataTypes } = require('sequelize');
 
-let tableName = "roles";
+let tableName = "media_files";
 
 let column_definitions = {
     id: {
@@ -9,25 +9,18 @@ let column_definitions = {
         primaryKey: true,
         defaultValue: DataTypes.UUIDV4
     },
-    company_id: {
+    advertisement_id: {
         type: DataTypes.UUID,
         allowNull: true
     },
-    role: {
-        type: DataTypes.STRING(100),
+    media_type: {
+        type: DataTypes.ENUM('IMAGE', 'VIDEO', 'AUDIO', 'HTML', 'DOCUMENT'),
         allowNull: false
     },
-    description: {
-        type: DataTypes.STRING(255),
-        allowNull: true
-    },
-    scope: {
-        type: DataTypes.ENUM('SYSTEM', 'CUSTOM'),
-        defaultValue: 'CUSTOM'
-    },
-    status: {
-        type: DataTypes.ENUM('ACTIVE', 'IN_ACTIVE'),
-        defaultValue: 'ACTIVE'
+    current_version_id: {
+        type: DataTypes.UUID,
+        allowNull: true,
+        unique: true
     },
     created_by: {
         type: DataTypes.UUID,
@@ -43,7 +36,7 @@ let column_definitions = {
     }
 };
 
-const Role = (sequelizeInstance) => {
+const MediaFile = (sequelizeInstance) => {
     let model_options = {
         sequelizeInstance,
         tableName: tableName,
@@ -52,11 +45,15 @@ const Role = (sequelizeInstance) => {
         updatedAt: "updated_date",
         createdAt: "created_date",
         deletedAt: "deleted_date",
+        indexes: [
+            { fields: ['advertisement_id'] },
+            { fields: ['media_type'] },
+        ],
     };
 
-    let model = sequelizeInstance.define('role', column_definitions, model_options);
+    let model = sequelizeInstance.define('media_file', column_definitions, model_options);
 
     return model;
 };
 
-module.exports = Role;
+module.exports = MediaFile;

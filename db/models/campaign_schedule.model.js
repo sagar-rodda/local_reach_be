@@ -1,6 +1,6 @@
 const { DataTypes } = require('sequelize');
 
-let tableName = "roles";
+let tableName = "campaign_schedules";
 
 let column_definitions = {
     id: {
@@ -9,25 +9,33 @@ let column_definitions = {
         primaryKey: true,
         defaultValue: DataTypes.UUIDV4
     },
-    company_id: {
+    campaign_id: {
         type: DataTypes.UUID,
-        allowNull: true
-    },
-    role: {
-        type: DataTypes.STRING(100),
         allowNull: false
     },
-    description: {
-        type: DataTypes.STRING(255),
+    schedule_type: {
+        type: DataTypes.ENUM('ONE_TIME', 'DAILY', 'WEEKLY', 'MONTHLY', 'CUSTOM'),
+        defaultValue: 'ONE_TIME'
+    },
+    start_date: {
+        type: DataTypes.DATE,
+        allowNull: false
+    },
+    end_date: {
+        type: DataTypes.DATE,
         allowNull: true
     },
-    scope: {
-        type: DataTypes.ENUM('SYSTEM', 'CUSTOM'),
-        defaultValue: 'CUSTOM'
+    days_of_week: {
+        type: DataTypes.JSON,
+        allowNull: true
     },
-    status: {
-        type: DataTypes.ENUM('ACTIVE', 'IN_ACTIVE'),
-        defaultValue: 'ACTIVE'
+    day_of_month: {
+        type: DataTypes.INTEGER,
+        allowNull: true
+    },
+    cron_expression: {
+        type: DataTypes.STRING(100),
+        allowNull: true
     },
     created_by: {
         type: DataTypes.UUID,
@@ -43,7 +51,7 @@ let column_definitions = {
     }
 };
 
-const Role = (sequelizeInstance) => {
+const CampaignSchedule = (sequelizeInstance) => {
     let model_options = {
         sequelizeInstance,
         tableName: tableName,
@@ -52,11 +60,14 @@ const Role = (sequelizeInstance) => {
         updatedAt: "updated_date",
         createdAt: "created_date",
         deletedAt: "deleted_date",
+        indexes: [
+            { fields: ['campaign_id'] },
+        ],
     };
 
-    let model = sequelizeInstance.define('role', column_definitions, model_options);
+    let model = sequelizeInstance.define('campaign_schedule', column_definitions, model_options);
 
     return model;
 };
 
-module.exports = Role;
+module.exports = CampaignSchedule;

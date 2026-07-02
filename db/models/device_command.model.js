@@ -1,6 +1,6 @@
 const { DataTypes } = require('sequelize');
 
-let tableName = "users";
+let tableName = "device_commands";
 
 let column_definitions = {
     id: {
@@ -9,48 +9,35 @@ let column_definitions = {
         primaryKey: true,
         defaultValue: DataTypes.UUIDV4
     },
-    company_id: {
+    device_id: {
         type: DataTypes.UUID,
-        allowNull: true
-    },
-    first_name: {
-        type: DataTypes.STRING(100),
         allowNull: false
     },
-    last_name: {
-        type: DataTypes.STRING(100),
+    type: {
+        type: DataTypes.ENUM('REBOOT', 'SHUTDOWN', 'UPDATE_FIRMWARE', 'CLEAR_CACHE', 'SYNC_CONTENT', 'TAKE_SCREENSHOT', 'RESTART_APP', 'SET_VOLUME'),
         allowNull: false
-    },
-    email: {
-        type: DataTypes.STRING(255),
-        allowNull: false,
-        unique: true
-    },
-    password_hash: {
-        type: DataTypes.STRING(500),
-        allowNull: false
-    },
-    phone: {
-        type: DataTypes.STRING(20),
-        allowNull: true
-    },
-    avatar_url: {
-        type: DataTypes.STRING(500),
-        allowNull: true
-    },
-    user_type: {
-        type: DataTypes.ENUM('admin', 'user'),
-        defaultValue: 'user'
     },
     status: {
-        type: DataTypes.ENUM('PENDING_VERIFICATION', 'ACTIVE', 'IN_ACTIVE', 'SUSPENDED', 'DELETED'),
-        defaultValue: 'PENDING_VERIFICATION'
+        type: DataTypes.ENUM('PENDING', 'SENT', 'ACKNOWLEDGED', 'EXECUTING', 'COMPLETED', 'FAILED', 'TIMEOUT'),
+        defaultValue: 'PENDING'
     },
-    last_logged_in: {
+    payload: {
+        type: DataTypes.JSON,
+        allowNull: true
+    },
+    result: {
+        type: DataTypes.JSON,
+        allowNull: true
+    },
+    sent_at: {
         type: DataTypes.DATE,
         allowNull: true
     },
-    terms_accepted_at: {
+    acknowledged_at: {
+        type: DataTypes.DATE,
+        allowNull: true
+    },
+    completed_at: {
         type: DataTypes.DATE,
         allowNull: true
     },
@@ -68,7 +55,7 @@ let column_definitions = {
     }
 };
 
-const User = (sequelizeInstance) => {
+const DeviceCommand = (sequelizeInstance) => {
     let model_options = {
         sequelizeInstance,
         tableName: tableName,
@@ -77,11 +64,15 @@ const User = (sequelizeInstance) => {
         updatedAt: "updated_date",
         createdAt: "created_date",
         deletedAt: "deleted_date",
+        indexes: [
+            { fields: ['device_id', 'status'] },
+            { fields: ['status'] },
+        ],
     };
 
-    let model = sequelizeInstance.define('user', column_definitions, model_options);
+    let model = sequelizeInstance.define('device_command', column_definitions, model_options);
 
     return model;
 };
 
-module.exports = User;
+module.exports = DeviceCommand;

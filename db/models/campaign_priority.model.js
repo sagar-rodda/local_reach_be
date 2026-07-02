@@ -1,6 +1,6 @@
 const { DataTypes } = require('sequelize');
 
-let tableName = "roles";
+let tableName = "campaign_priorities";
 
 let column_definitions = {
     id: {
@@ -9,25 +9,22 @@ let column_definitions = {
         primaryKey: true,
         defaultValue: DataTypes.UUIDV4
     },
-    company_id: {
-        type: DataTypes.UUID,
-        allowNull: true
+    code: {
+        type: DataTypes.STRING(50),
+        allowNull: false,
+        unique: true
     },
-    role: {
+    label: {
         type: DataTypes.STRING(100),
         allowNull: false
     },
-    description: {
-        type: DataTypes.STRING(255),
+    weight: {
+        type: DataTypes.INTEGER,
+        allowNull: false
+    },
+    color: {
+        type: DataTypes.STRING(20),
         allowNull: true
-    },
-    scope: {
-        type: DataTypes.ENUM('SYSTEM', 'CUSTOM'),
-        defaultValue: 'CUSTOM'
-    },
-    status: {
-        type: DataTypes.ENUM('ACTIVE', 'IN_ACTIVE'),
-        defaultValue: 'ACTIVE'
     },
     created_by: {
         type: DataTypes.UUID,
@@ -43,7 +40,7 @@ let column_definitions = {
     }
 };
 
-const Role = (sequelizeInstance) => {
+const CampaignPriority = (sequelizeInstance) => {
     let model_options = {
         sequelizeInstance,
         tableName: tableName,
@@ -54,9 +51,9 @@ const Role = (sequelizeInstance) => {
         deletedAt: "deleted_date",
     };
 
-    let model = sequelizeInstance.define('role', column_definitions, model_options);
+    let model = sequelizeInstance.define('campaign_priority', column_definitions, model_options);
 
     return model;
 };
 
-module.exports = Role;
+module.exports = CampaignPriority;

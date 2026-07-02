@@ -31,6 +31,72 @@ const CommonDataLayer = (function () {
 		role_permission: sequelizeConfig.models.role_permission,
 		email_otp: sequelizeConfig.models.email_otp,
 		audit_log: sequelizeConfig.models.audit_log,
+		refresh_token: sequelizeConfig.models.refresh_token,
+		login_history: sequelizeConfig.models.login_history,
+
+		// Organization
+		company: sequelizeConfig.models.company,
+		store: sequelizeConfig.models.store,
+		store_category: sequelizeConfig.models.store_category,
+		store_contact: sequelizeConfig.models.store_contact,
+
+		// Location
+		country: sequelizeConfig.models.country,
+		state: sequelizeConfig.models.state,
+		city: sequelizeConfig.models.city,
+		area: sequelizeConfig.models.area,
+		store_location: sequelizeConfig.models.store_location,
+
+		// Devices
+		device_group: sequelizeConfig.models.device_group,
+		device: sequelizeConfig.models.device,
+		device_assignment: sequelizeConfig.models.device_assignment,
+		device_heartbeat: sequelizeConfig.models.device_heartbeat,
+		device_health: sequelizeConfig.models.device_health,
+		device_storage: sequelizeConfig.models.device_storage,
+		device_network: sequelizeConfig.models.device_network,
+		device_configuration: sequelizeConfig.models.device_configuration,
+		device_log: sequelizeConfig.models.device_log,
+		device_command: sequelizeConfig.models.device_command,
+		device_screenshot: sequelizeConfig.models.device_screenshot,
+
+		// Advertisement & Files
+		advertisement: sequelizeConfig.models.advertisement,
+		media_file: sequelizeConfig.models.media_file,
+		media_version: sequelizeConfig.models.media_version,
+		thumbnail: sequelizeConfig.models.thumbnail,
+		media_tag: sequelizeConfig.models.media_tag,
+		advertisement_tag: sequelizeConfig.models.advertisement_tag,
+
+		// Playlist
+		playlist: sequelizeConfig.models.playlist,
+		playlist_item: sequelizeConfig.models.playlist_item,
+		playlist_version: sequelizeConfig.models.playlist_version,
+
+		// Campaign
+		campaign_priority: sequelizeConfig.models.campaign_priority,
+		campaign: sequelizeConfig.models.campaign,
+		campaign_playlist: sequelizeConfig.models.campaign_playlist,
+		campaign_target: sequelizeConfig.models.campaign_target,
+		campaign_schedule: sequelizeConfig.models.campaign_schedule,
+		campaign_time_slot: sequelizeConfig.models.campaign_time_slot,
+		campaign_status_history: sequelizeConfig.models.campaign_status_history,
+
+		// Playback
+		playlist_execution: sequelizeConfig.models.playlist_execution,
+		advertisement_impression: sequelizeConfig.models.advertisement_impression,
+		advertisement_playback_error: sequelizeConfig.models.advertisement_playback_error,
+		playback_history: sequelizeConfig.models.playback_history,
+
+		// Notifications
+		notification: sequelizeConfig.models.notification,
+		notification_recipient: sequelizeConfig.models.notification_recipient,
+		notification_preference: sequelizeConfig.models.notification_preference,
+
+		// Support
+		support_ticket: sequelizeConfig.models.support_ticket,
+		support_comment: sequelizeConfig.models.support_comment,
+		support_attachment: sequelizeConfig.models.support_attachment,
 	};
 
 	async function create(model_name, json, options) {
